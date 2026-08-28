@@ -1,19 +1,55 @@
-import InfinityMark from './components/InfinityMark/InfinityMark.jsx'
-import Lightfall from './components/Lightfall/Lightfall.jsx'
+import { useEffect, useState } from 'react'
+import Ferrofluid from './components/Ferrofluid/Ferrofluid.jsx'
+import LoadingScreen from './components/LoadingScreen/LoadingScreen.jsx'
+import ProfileIntro from './components/ProfileIntro/ProfileIntro.jsx'
+
+const loadingSteps = [
+  { at: 0, message: 'Инициализация Маши...', progress: '14%' },
+  { at: 800, message: 'Загружаем характер...', progress: '31%' },
+  { at: 1600, message: 'Удаляем red flags...', progress: '47%' },
+  { at: 2400, message: 'Ошибка: некоторые являются частью комплектации.', progress: '63%' },
+  { at: 3300, message: 'Проверяем совместимость с адекватными людьми...', progress: '82%' },
+  { at: 4400, message: 'Готово. Удачи.', progress: '100%' },
+]
+
+const ferrofluidColors = ['#bdb7c4', '#ded9e2', '#a99bb5']
 
 function App() {
+  const [step, setStep] = useState(0)
+  const [previousStep, setPreviousStep] = useState(null)
+  const [phase, setPhase] = useState('loading')
+
+  useEffect(() => {
+    const timers = loadingSteps.slice(1).map(({ at }, index) => setTimeout(() => {
+      setStep((current) => {
+        setPreviousStep(current)
+        return index + 1
+      })
+      setTimeout(() => setPreviousStep(null), 330)
+    }, at))
+    timers.push(setTimeout(() => setPhase('leaving'), 5000))
+    timers.push(setTimeout(() => setPhase('complete'), 5900))
+    return () => timers.forEach(clearTimeout)
+  }, [])
+
   return (
     <main className="site-shell">
-      <Lightfall colors={['#b68cff', '#7c4dff', '#d7b6ff', '#f1d6ff']} backgroundColor="#07030f" speed={0.65} streakCount={3} streakWidth={0.8} streakLength={1} glow={0.9} density={0.55} twinkle={0.7} zoom={2.5} backgroundGlow={0.35} opacity={0.9} mouseInteraction mouseStrength={0.5} mouseRadius={0.8} mouseDampening={0.15} />
-      <section className="hero" aria-label="Profile preview">
-        <div className="hero__island">
-          <div className="hero__content">
-            <img className="butterfly-mark" src="/images/butterfly.svg" alt="" aria-hidden="true" />
-            <InfinityMark />
-            <p className="hero__eyebrow">profile loading...</p>
-          </div>
-        </div>
-      </section>
+      <Ferrofluid
+        colors={ferrofluidColors}
+        speed={0.22}
+        scale={1.45}
+        turbulence={0.72}
+        fluidity={0.12}
+        rimWidth={0.18}
+        sharpness={3}
+        shimmer={0.7}
+        glow={1.25}
+        flowDirection="down"
+        opacity={0.52}
+      />
+      {phase !== 'complete'
+        ? <LoadingScreen currentStep={step} previousStep={previousStep} steps={loadingSteps} leaving={phase === 'leaving'} />
+        : <ProfileIntro />}
     </main>
   )
 }
