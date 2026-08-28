@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import Ferrofluid from './components/Ferrofluid/Ferrofluid.jsx'
 import LoadingScreen from './components/LoadingScreen/LoadingScreen.jsx'
 import ProfileIntro from './components/ProfileIntro/ProfileIntro.jsx'
+import TechnicalSpecs from './components/TechnicalSpecs/TechnicalSpecs.jsx'
+import PackageSection from './components/PackageSection/PackageSection.jsx'
+import CompatibilityQuiz from './components/CompatibilityQuiz/CompatibilityQuiz.jsx'
 
 const loadingSteps = [
   { at: 0, message: 'Инициализация Маши...', progress: '14%' },
@@ -49,7 +52,7 @@ function App() {
       />
       {phase !== 'complete'
         ? <LoadingScreen currentStep={step} previousStep={previousStep} steps={loadingSteps} leaving={phase === 'leaving'} />
-        : <ProfileIntro />}
+        : <><ProfileIntro /><TechnicalSpecs /><PackageSection /><CompatibilityQuiz /></>}
     </main>
   )
 }
