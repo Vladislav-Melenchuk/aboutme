@@ -1,12 +1,11 @@
-import { useState } from 'react'
-import IntroModal from '../IntroModal/IntroModal.jsx'
-
 export default function ProfileIntro() {
-  const [modalOpen, setModalOpen] = useState(false)
+  const showManual = () => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    document.getElementById('technical-specs')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
+  }
 
   return (
-    <>
-      <section className="profile-intro" aria-labelledby="profile-name">
+      <section id="profile" className="profile-intro" aria-labelledby="profile-name">
         <div className="profile-intro__layout">
           <figure className="profile-portrait reveal reveal--portrait">
             <img src="/images/photo_avatar.jpg" alt="Портрет Маши" />
@@ -18,12 +17,10 @@ export default function ProfileIntro() {
               <h1 id="profile-name">Маша</h1>
             </div>
             <blockquote className="profile-quote reveal reveal--quote">«Я не сложная. Просто инструкция потерялась.»</blockquote>
-            <button className="intro-cta reveal reveal--cta" type="button" onClick={() => setModalOpen(true)}>Познакомимся?</button>
+            <button className="intro-cta reveal reveal--cta" type="button" onClick={showManual}>Познакомимся?</button>
             <p className="profile-disclaimer reveal reveal--disclaimer">Нажимая кнопку, вы подтверждаете готовность к непредвиденным последствиям.</p>
           </div>
         </div>
       </section>
-      {modalOpen && <IntroModal onClose={() => setModalOpen(false)} />}
-    </>
   )
 }
